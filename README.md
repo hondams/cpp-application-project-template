@@ -5,16 +5,30 @@
 ### ツールのインストール
 
 ```powershell
+winget install -e --id Git.Git
 winget install -e --id JetBrains.CLion
 winget install -e --id Kitware.CMake
 winget install -e --id Python.Python.3.13
 winget install -e --id ezwinports.make
 ```
 
+### ツールのインストール（WebAssembly）
+
+```powershell
+winget install -e --id OpenJS.NodeJS
+```
+
 ### Gitの設定
 
 ```bash
 git config --local core.autocrlf false
+```
+
+### 3rdのソースの取得
+
+```bash
+cd tools/build_shell
+sh git_clone_thirdparty.sh
 ```
 
 ## サンプルプロジェクトの実行方法
