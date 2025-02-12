@@ -111,15 +111,22 @@ endforeach()
 #
 # For main build
 #
-add_executable(${project_BIN} ${project_SRC_FILES})
-target_include_directories(${project_BIN} PUBLIC
+add_library(${project_LIB} ${project_SRC_FILES})
+target_include_directories(${project_LIB} PUBLIC
         ${project_SRC_DIR} ${nanovg_SRC_DIR}
         ${bx_INCLUDE_DIR} ${bgfx_INCLUDE_DIR} ${bimg_INCLUDE_DIR})
-target_link_libraries(${project_BIN}
+target_link_libraries(${project_LIB} PUBLIC
         spdlog
         nanovg
         bgfx
         Boost::format)
+
+add_executable(${project_BIN} ${app_SRC_FILES})
+target_include_directories(${project_BIN} PUBLIC
+        ${app_SRC_DIR}
+        ${project_LIB})
+target_link_libraries(${project_BIN} PUBLIC
+        ${project_LIB})
 set_target_properties(${project_BIN} PROPERTIES VERSION "${APPLICATION_VERSION_MAJOR}.${APPLICATION_VERSION_MINOR}" OUTPUT_NAME ${project_BIN} CLEAN_DIRECT_OUTPUT 1)
 install(TARGETS ${project_BIN} DESTINATION bin)
 
@@ -128,16 +135,6 @@ install(TARGETS ${project_BIN} DESTINATION bin)
 # For test
 #
 enable_testing()
-
-add_library(${project_LIB} ${project_SRC_FILES})
-target_include_directories(${project_LIB} PUBLIC
-        ${project_SRC_DIR} ${nanovg_SRC_DIR}
-        ${bx_INCLUDE_DIR} ${bgfx_INCLUDE_DIR} ${bimg_INCLUDE_DIR})
-target_link_libraries(${project_LIB}
-        spdlog
-        nanovg
-        bgfx
-        Boost::format)
 
 add_executable(${test_BIN} ${test_SRC_FILES})
 target_include_directories(${test_BIN} PUBLIC ${project_SRC_DIR})
