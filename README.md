@@ -34,5 +34,4 @@
 
  TODO: Enhance section.
 
-
-git config --local core.autocrlf input
+git config --local core.autocrlf false
