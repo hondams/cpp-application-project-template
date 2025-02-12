@@ -1,3 +1,55 @@
+# C++ アプリケーション プロジェクト テンプレート
+
+## 環境構築
+
+### ツールのインストール
+
+```powershell
+winget install -e --id JetBrains.CLion
+winget install -e --id Kitware.CMake
+winget install -e --id Python.Python.3.13
+winget install -e --id ezwinports.make
+```
+
+### Gitの設定
+
+```bash
+git config --local core.autocrlf false
+```
+
+## サンプルプロジェクトの実行方法
+
+### サンプルプロジェクトの取り込み
+
+- CLionで、`CMakeLists.txt`のあるフォルダを開く。
+  - プロジェクトを信頼する。
+
+### サンプルプロジェクトのビルド
+
+- 左下の`CMake`アイコンから、`CMakeツールウィンド`を開き、`CMakeプロジェクトの再ロード`ボタンを押下。
+- メニューから、`ビルド` ＞ `プロジェクトの再ビルド` を選択
+
+### サンプルプロジェクトのアプリケーション実行
+
+- メニューから、`実行` ＞ `実行構成の編集` を選択し、`実行/デバッグ構成`ダイアログを開く
+- `実行/デバッグ構成`ダイアログの左のツリーから、`CMakeアプリケーション` の 実行したいアプリケーションを選択し、`実行` ボタンを押下
+
+### サンプルプロジェクトのテスト実行
+
+- メニューから、`実行` ＞ `実行構成の編集` を選択し、`実行/デバッグ構成`ダイアログを開く
+- `実行/デバッグ構成`ダイアログの左のツリーから、`CTest アプリケーション` の テスト対象を選択し、`実行` ボタンを押下
+
+## プロジェクトのディレクトリ構成
+
+## 参考資料
+
+- 参考にしたプロジェクトテンプレート
+  - [C++ Application Project Template](https://code.google.com/archive/p/cpp-project-template/)
+  - [C++ Library Project Template](https://code.google.com/archive/p/cpp-library-project-template/)
+
+## オリジナルドキュメント
+
+```text
 == README ==
 
  1.) Prerequisites
@@ -33,5 +85,5 @@
 == 4. CONTRIBUTING ==
 
  TODO: Enhance section.
+``` 
 
-git config --local core.autocrlf false
