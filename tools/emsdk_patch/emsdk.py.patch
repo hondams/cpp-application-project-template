@@ -1,0 +1,13 @@
+*** emsdk/emsdk.py	2025-02-11 13:42:28.230162200 +0900
+--- emsdk_patch/emsdk.py.updated	2025-02-12 14:36:09.252946300 +0900
+***************
+*** 37,42 ****
+--- 37,44 ----
+    from urlparse import urljoin
+    from urllib2 import urlopen
+  
++ import ssl
++ ssl._create_default_https_context = ssl._create_unverified_context
+  
+  emsdk_packages_url = 'https://storage.googleapis.com/webassembly/emscripten-releases-builds/deps/'
+  
