@@ -32,9 +32,30 @@ set(project_BIN ${PROJECT_NAME})
 set(project_LIB lib${PROJECT_NAME})
 set(test_BIN ${PROJECT_NAME}-unittests)
 
-file(GLOB_RECURSE app_SRC_FILES ${app_SRC_DIR}/*.(cpp|cxx|cc|C|c|h|hpp))
-file(GLOB_RECURSE project_SRC_FILES ${project_SRC_DIR}/*.(cpp|cxx|cc|C|c|h|hpp))
-file(GLOB_RECURSE test_SRC_FILES ${test_SRC_DIR}/*.(cpp|cxx|cc|C|c|h|hpp))
+file(GLOB_RECURSE app_SRC_FILES
+        ${app_SRC_DIR}/*.cpp
+        ${app_SRC_DIR}/*.cxx
+        ${app_SRC_DIR}/*.cc
+        ${app_SRC_DIR}/*.C
+        ${app_SRC_DIR}/*.c
+        ${app_SRC_DIR}/*.h
+        ${app_SRC_DIR}/*.hpp)
+file(GLOB_RECURSE project_SRC_FILES
+        ${project_SRC_DIR}/*.cpp
+        ${project_SRC_DIR}/*.cxx
+        ${project_SRC_DIR}/*.cc
+        ${project_SRC_DIR}/*.C
+        ${project_SRC_DIR}/*.c
+        ${project_SRC_DIR}/*.h
+        ${project_SRC_DIR}/*.hpp)
+file(GLOB_RECURSE test_SRC_FILES
+        ${test_SRC_DIR}/*.cpp
+        ${test_SRC_DIR}/*.cxx
+        ${test_SRC_DIR}/*.cc
+        ${test_SRC_DIR}/*.C
+        ${test_SRC_DIR}/*.c
+        ${test_SRC_DIR}/*.h
+        ${test_SRC_DIR}/*.hpp)
 
 file(GLOB_RECURSE app_CONFIG_FILES ${app_SRC_DIR}/*.h.in.cmake)
 file(GLOB_RECURSE project_CONFIG_FILES ${project_SRC_DIR}/*.h.in.cmake)
