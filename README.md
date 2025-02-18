@@ -31,6 +31,17 @@ cd tools/build_shell
 sh git_clone_thirdparty.sh
 ```
 
+### CLion（WebAssembly作成用設定）
+
+- 外観 ＆ 振る舞い
+  - パス変数
+    - 名前：EMSCRIPTEN
+    - 値：`tools\emsdk\upstream\emscripten`のフルパス
+
+- ビルド、実行、デプロイ
+  - CMake
+    - CMake オプション：-DCMAKE_TOOLCHAIN_FILE=${EMSCRIPTEN}/cmake/Modules/Platform/Emscripten.cmake
+
 ## サンプルプロジェクトの実行方法
 
 ### サンプルプロジェクトの取り込み
@@ -60,6 +71,9 @@ sh git_clone_thirdparty.sh
 - 参考にしたプロジェクトテンプレート
   - [C++ Application Project Template](https://code.google.com/archive/p/cpp-project-template/)
   - [C++ Library Project Template](https://code.google.com/archive/p/cpp-library-project-template/)
+
+- 参考にしたサイト
+  - [CMakeスクリプトを作成する際のガイドライン](https://qiita.com/shohirose/items/5b406f060cd5557814e9)
 
 ## オリジナルドキュメント
 
