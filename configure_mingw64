@@ -1,0 +1,4 @@
+#! /bin/bash
+export C=~/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT.LLVM_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/gcc.exe
+export CC=~/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT.LLVM_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/g++.exe
+export CLION_HOME=/c/Program\ Files\ \(x86\)/JetBrains/CLion\ 2024.3.2

@@ -6,11 +6,10 @@ MyInt::MyInt(int num)
 
 bool MyInt::isOdd()
 {
-  // Šï”‚©‚Ç‚¤‚©‚ğ”»’è‚·‚é
   return (num_ % 2) != 0 ? true : false;
 }
 
 bool MyInt::isEven()
 {
-  return isOdd();  // —á‚Æ‚µ‚ÄA‚±‚±‚ÉƒoƒO‚ª‚ ‚é
+  return isOdd();
 }

@@ -4,6 +4,7 @@
 # Project Properties
 #
 cmake_minimum_required(VERSION 3.30)
+cmake_policy(SET CMP0077 NEW)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -29,7 +30,7 @@ set(project_SRC_DIR src)
 set(test_SRC_DIR test)
 
 set(project_BIN ${PROJECT_NAME})
-set(project_LIB lib${PROJECT_NAME})
+set(project_LIB ${PROJECT_NAME}-lib)
 set(test_BIN ${PROJECT_NAME}-unittests)
 
 file(GLOB_RECURSE app_SRC_FILES
@@ -67,12 +68,23 @@ set(nanovg_SRC_DIR ${nanovg_DIR}/src)
 file(GLOB_RECURSE nanovg_SRC_FILES ${nanovg_SRC_DIR}/*)
 
 set(bgfx_cmake_DIR thirdparty/bgfx.cmake)
-set(bx_DIR thirdparty/bgfx.cmake/bx)
-set(bgfx_DIR thirdparty/bgfx.cmake/bgfx)
-set(bimg_DIR thirdparty/bgfx.cmake/bimg)
-set(bx_INCLUDE_DIR thirdparty/bgfx.cmake/bx/include)
-set(bgfx_INCLUDE_DIR thirdparty/bgfx.cmake/bgfx/include)
-set(bimg_INCLUDE_DIR thirdparty/bgfx.cmake/bimg/include)
+set(bx_DIR ${bgfx_cmake_DIR}/bx)
+set(bgfx_DIR ${bgfx_cmake_DIR}/bgfx)
+set(bimg_DIR ${bgfx_cmake_DIR}/bimg)
+set(bx_INCLUDE_DIR ${bx_DIR}/include)
+set(bgfx_INCLUDE_DIR ${bgfx_DIR}/include)
+set(bimg_INCLUDE_DIR ${bimg_DIR}/include)
+set(bgfx_examples_common_INCLUDE_DIR ${bgfx_cmake_DIR})
+file(GLOB_RECURSE bgfx_examples_common_SRC_FILES ${bgfx_DIR}/examples/common/*)
+
+set(BGFX_BUILD_EXAMPLES OFF)
+if(EMSCRIPTEN)
+    set(BGFX_BUILD_EXAMPLE_COMMON OFF)
+    set(BGFX_BUILD_TOOLS OFF)
+endif ()
+
+set(dear_imgui_INCLUDE_DIR ${bgfx_DIR}/3rdparty)
+file(GLOB_RECURSE dear_imgui_SRC_FILES ${bgfx_DIR}/3rdparty/dear-imgui/*)
 
 #
 # Debugging Options
@@ -103,13 +115,13 @@ if (WIN32)
 endif ()
 
 # spdlog
-FetchContent_Declare(
-        spdlog
-        URL https://github.com/gabime/spdlog/archive/f355b3d58f7067eee1706ff3c801c2361011f3d5.zip # v1.15.1
-)
+#FetchContent_Declare(
+#        spdlog
+#        URL https://github.com/gabime/spdlog/archive/f355b3d58f7067eee1706ff3c801c2361011f3d5.zip # v1.15.1
+#)
 
-FetchContent_MakeAvailable(Boost googletest spdlog)
-
+#FetchContent_MakeAvailable(Boost googletest spdlog)
+FetchContent_MakeAvailable(Boost googletest)
 
 # nanovg
 add_library(nanovg STATIC ${nanovg_SRC_FILES})
@@ -117,6 +129,12 @@ target_include_directories(nanovg PUBLIC ${nanovg_SRC_DIR})
 
 # bgfx
 add_subdirectory(${bgfx_cmake_DIR})
+
+
+# dear-imgui
+add_library(dear_imgui STATIC ${dear_imgui_SRC_FILES})
+target_include_directories(dear_imgui PUBLIC ${dear_imgui_INCLUDE_DIR} ${bx_INCLUDE_DIR} )
+target_link_libraries(dear_imgui PUBLIC bgfx)
 
 #
 # Configure Files
@@ -132,24 +150,58 @@ endforeach()
 #
 # For main build
 #
-add_library(${project_LIB} ${project_SRC_FILES})
+add_library(${project_LIB} ${project_SRC_FILES}
+        ${bgfx_examples_common_SRC_FILES})
 target_include_directories(${project_LIB} PUBLIC
         ${project_SRC_DIR} ${nanovg_SRC_DIR}
-        ${bx_INCLUDE_DIR} ${bgfx_INCLUDE_DIR} ${bimg_INCLUDE_DIR})
+        ${bx_INCLUDE_DIR} ${bgfx_INCLUDE_DIR} ${bimg_INCLUDE_DIR}
+        ${bgfx_examples_common_INCLUDE_DIR} ${dear_imgui_INCLUDE_DIR}
+)
 target_link_libraries(${project_LIB} PUBLIC
-        spdlog
+#        spdlog
         nanovg
+        dear_imgui
         bgfx
         Boost::format)
+if(EMSCRIPTEN)
+    target_compile_options(${project_LIB} PRIVATE -msimd128 -matomics -mbulk-memory)
+    target_link_options(${project_LIB} PRIVATE -msimd128 -matomics -mbulk-memory)
+endif ()
 
-add_executable(${project_BIN} ${app_SRC_FILES})
-target_include_directories(${project_BIN} PUBLIC
-        ${app_SRC_DIR}
-        ${project_LIB})
-target_link_libraries(${project_BIN} PUBLIC
-        ${project_LIB})
-set_target_properties(${project_BIN} PROPERTIES VERSION "${APPLICATION_VERSION_MAJOR}.${APPLICATION_VERSION_MINOR}" OUTPUT_NAME ${project_BIN} CLEAN_DIRECT_OUTPUT 1)
-install(TARGETS ${project_BIN} DESTINATION bin)
+if(EMSCRIPTEN)
+    add_compile_options("-pthread")
+    add_compile_options("-fwasm-exceptions")
+
+    add_executable(${project_BIN} ${app_SRC_FILES})
+    set_property(TARGET ${project_BIN} PROPERTY SUFFIX ".html")
+    target_link_options(${project_BIN} PRIVATE
+#            "-sALLOW_MEMORY_GROWTH=1"
+#            "-sALLOW_TABLE_GROWTH=1"
+            "-sSAFE_HEAP=1"
+            "-sFULL_ES3"
+            "-pthread"
+            "-fwasm-exceptions"
+            #  "-sPTHREAD_POOL_SIZE=navigator.hardwareConcurrency"
+            "-sPTHREAD_POOL_SIZE=4"
+#            "-sMAXIMUM_MEMORY=1024mb"
+            "-sINITIAL_MEMORY=1024mb"
+    )
+    target_include_directories(${project_BIN} PUBLIC
+            ${app_SRC_DIR}
+            ${project_LIB})
+    target_link_libraries(${project_BIN} PUBLIC
+            ${project_LIB})
+    set_target_properties(${project_BIN} PROPERTIES VERSION "${APPLICATION_VERSION_MAJOR}.${APPLICATION_VERSION_MINOR}" OUTPUT_NAME ${project_BIN} CLEAN_DIRECT_OUTPUT 1)
+else()
+    add_executable(${project_BIN} ${app_SRC_FILES})
+    target_include_directories(${project_BIN} PUBLIC
+            ${app_SRC_DIR}
+            ${project_LIB})
+    target_link_libraries(${project_BIN} PUBLIC
+            ${project_LIB})
+    set_target_properties(${project_BIN} PROPERTIES VERSION "${APPLICATION_VERSION_MAJOR}.${APPLICATION_VERSION_MINOR}" OUTPUT_NAME ${project_BIN} CLEAN_DIRECT_OUTPUT 1)
+    install(TARGETS ${project_BIN} DESTINATION bin)
+endif()
 
 
 #

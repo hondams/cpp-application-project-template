@@ -11,8 +11,8 @@
  */
  
 #define APPLICATION_NAME               "Project Name"
-#define APPLICATION_CODENAME           "projectname"
-#define APPLICATION_COPYRIGHT_YEARS    "2009"
+#define APPLICATION_CODENAME           "projectName"
+#define APPLICATION_COPYRIGHT_YEARS    "2025"
 #define APPLICATION_VERSION_MAJOR      1
 /* #undef APPLICATION_VERSION_MINOR */
 /* #undef APPLICATION_VERSION_PATCH */

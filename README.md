@@ -66,6 +66,14 @@ sh git_clone_thirdparty.sh
 
 ## プロジェクトのディレクトリ構成
 
+## bashの環境構築
+
+```bash
+```
+
+BrechtSanders.WinLibs.POSIX.UCRT.LLVM
+
+
 ## 参考資料
 
 - 参考にしたプロジェクトテンプレート

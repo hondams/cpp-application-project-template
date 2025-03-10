@@ -1,6 +1,5 @@
 #include <iostream>
 #include <boost/format.hpp>
-#include <spdlog/spdlog.h>
 #include <nanovg.h>
 #include <bgfx/bgfx.h>
 #include <bx/bx.h>
@@ -21,8 +20,6 @@ int main() {
         // <shortcut actionId="ToggleLineBreakpoint"/>.
         std::cout << "i = " << i << std::endl;
     }
-
-    spdlog::error("spdlog warning");
 
     std::cout<<boost::format("%s is %.2lf.")%"Pi"%3.14159265<<std::endl;
 
